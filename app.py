@@ -185,11 +185,11 @@ geo_utils = GeoUtils()
 @st.cache_data
 def load_training_data():
     try:
-        df = pd.read_csv('artifects/train.csv')
+        df = pd.read_csv("artifects/train.csv")
         return df
     except:
         try:
-            df = pd.read_csv('notebook/indian_housing_data.csv')
+            df = pd.read_csv("C:\\Users\\navee\\Cisco Packet Tracer 8.2.2\\saves\\india_house\\notebook\\indian_housing_data.csv")
             return df
         except:
             return None

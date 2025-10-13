@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/navee/Cisco Packet Tracer 8.2.2/saves/india_house/mlruns/955853333213484155/f39498249cfa47b0b3327f92673ff74b/artifacts
+end_time: 1760376270766
+entry_point_name: ''
+experiment_id: '955853333213484155'
+lifecycle_stage: active
+run_id: f39498249cfa47b0b3327f92673ff74b
+run_name: Lasso Regression_evalutions
+run_uuid: f39498249cfa47b0b3327f92673ff74b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1760376265935
+status: 3
+tags: []
+user_id: navee

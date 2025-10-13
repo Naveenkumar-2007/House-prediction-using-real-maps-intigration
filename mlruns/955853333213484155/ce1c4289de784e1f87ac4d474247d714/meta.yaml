@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/navee/Cisco Packet Tracer 8.2.2/saves/india_house/mlruns/955853333213484155/ce1c4289de784e1f87ac4d474247d714/artifacts
+end_time: 1760376261418
+entry_point_name: ''
+experiment_id: '955853333213484155'
+lifecycle_stage: active
+run_id: ce1c4289de784e1f87ac4d474247d714
+run_name: Linear Regression_evalutions
+run_uuid: ce1c4289de784e1f87ac4d474247d714
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1760376254826
+status: 3
+tags: []
+user_id: navee
