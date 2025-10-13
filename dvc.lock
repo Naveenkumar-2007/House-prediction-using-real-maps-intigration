@@ -1,0 +1,78 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python -m src.components.data_ingestion
+    deps:
+    - path: notebook/indian_housing_data.csv
+      hash: md5
+      md5: a03d32719e19a8f67348275c811f52f1
+      size: 41363394
+    - path: src/components/data_ingestion.py
+      hash: md5
+      md5: 9807f47d0cee380d684532f1f8efba20
+      size: 1455
+    outs:
+    - path: artifects/raw.csv
+      hash: md5
+      md5: a03d32719e19a8f67348275c811f52f1
+      size: 41363394
+    - path: artifects/test.csv
+      hash: md5
+      md5: 62b436f30c3d5da702c646c1b7707616
+      size: 8271257
+    - path: artifects/train.csv
+      hash: md5
+      md5: 59a8db39feec2f6ab7ef1d2b50688112
+      size: 33092422
+  data_transformation:
+    cmd: python -m src.components.data_transformation
+    deps:
+    - path: artifects/test.csv
+      hash: md5
+      md5: 62b436f30c3d5da702c646c1b7707616
+      size: 8271257
+    - path: artifects/train.csv
+      hash: md5
+      md5: 59a8db39feec2f6ab7ef1d2b50688112
+      size: 33092422
+    - path: src/components/data_transformation.py
+      hash: md5
+      md5: c2bd35168bc27696b141b35e97a22dca
+      size: 6248
+    outs:
+    - path: artifects/labelencoding.pkl
+      hash: md5
+      md5: 433691856defdbd6c17bab415bcf8049
+      size: 11015
+    - path: artifects/preprocessing.pkl
+      hash: md5
+      md5: 433ed1d5e804f11fbf30b65c54d499a6
+      size: 3997
+  model_training:
+    cmd: python -m src.components.model_trainer
+    deps:
+    - path: artifects/labelencoding.pkl
+      hash: md5
+      md5: 433691856defdbd6c17bab415bcf8049
+      size: 11015
+    - path: artifects/preprocessing.pkl
+      hash: md5
+      md5: 433ed1d5e804f11fbf30b65c54d499a6
+      size: 3997
+    - path: artifects/test.csv
+      hash: md5
+      md5: 62b436f30c3d5da702c646c1b7707616
+      size: 8271257
+    - path: artifects/train.csv
+      hash: md5
+      md5: 59a8db39feec2f6ab7ef1d2b50688112
+      size: 33092422
+    - path: src/components/model_trainer.py
+      hash: md5
+      md5: 6eda3c67f06745f85ee43fcb795a0b06
+      size: 6269
+    outs:
+    - path: artifects/model.pkl
+      hash: md5
+      md5: 859cdd18f6cdac0db6223177bbffcf7d
+      size: 2059262097

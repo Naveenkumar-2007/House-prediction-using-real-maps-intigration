@@ -1,0 +1,32 @@
+stages:
+  data_ingestion:
+    cmd: python -m src.components.data_ingestion
+    deps:
+      - notebook/indian_housing_data.csv
+      - src/components/data_ingestion.py
+    outs:
+      - artifects/raw.csv
+      - artifects/train.csv
+      - artifects/test.csv
+  
+  data_transformation:
+    cmd: python -m src.components.data_transformation
+    deps:
+      - src/components/data_transformation.py
+      - artifects/train.csv
+      - artifects/test.csv
+    outs:
+      - artifects/preprocessing.pkl
+      - artifects/labelencoding.pkl
+
+  model_training:
+    cmd: python -m src.components.model_trainer
+    deps:
+      - src/components/model_trainer.py
+      - artifects/train.csv
+      - artifects/test.csv
+      - artifects/preprocessing.pkl
+      - artifects/labelencoding.pkl
+    outs:
+      - artifects/model.pkl
+
