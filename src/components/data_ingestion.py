@@ -3,7 +3,7 @@ import pandas as pd
 import os,sys
 from dataclasses import dataclass
 from sklearn.model_selection import train_test_split
-from Exeception import CustomException
+from Exception import CustomException
 @dataclass
 class DATA_INGESTION_CONFIG:
     raw_data_path:str=os.path.join("artifects","raw.csv")

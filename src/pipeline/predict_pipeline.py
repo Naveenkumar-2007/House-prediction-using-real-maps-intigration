@@ -3,16 +3,18 @@ import pandas as pd
 import joblib
 import os
 import numpy as np
+from src.utils.location_predictor import LocationBasedPredictor
 
 class PredictPipeline:
     def __init__(self):
         self.model_path = 'artifects/model.pkl'
         self.preprocessor_path = 'artifects/preprocessing.pkl'
         self.label_encoders_path = 'artifects/labelencoding.pkl'
+        self.location_predictor = LocationBasedPredictor()
         
     def predict(self, features_df):
         """
-        Make predictions using the trained model for Indian housing data
+        Make predictions using the trained model for Indian housing data with location enhancement
         """
         try:
             # Load model, preprocessor and label encoders
@@ -21,16 +23,55 @@ class PredictPipeline:
             preprocessor = joblib.load(self.preprocessor_path)
             label_encoders = joblib.load(self.label_encoders_path)
             
-            # Prepare features
+            # Get location information for enhancement
+            city = features_df.iloc[0].get('City', 'Mumbai')
+            locality = features_df.iloc[0].get('Locality', 'Unknown')
+            state = features_df.iloc[0].get('State', 'Maharashtra')
+            
+            # Get real coordinates if not provided
+            if 'Latitude' not in features_df.columns or pd.isna(features_df.iloc[0].get('Latitude')):
+                lat, lon = self.location_predictor.get_coordinates(city, locality, state)
+                features_df = features_df.copy()
+                features_df['Latitude'] = lat
+                features_df['Longitude'] = lon
+            else:
+                lat = features_df.iloc[0]['Latitude']
+                lon = features_df.iloc[0]['Longitude']
+            
+            # Calculate location-based features
+            location_features = self.location_predictor.calculate_location_features(
+                city, locality, state, lat, lon
+            )
+            
+            # Prepare features for model
             features_prepared = self.prepare_features(features_df, label_encoders)
             
             # Transform features
             data_scaled = preprocessor.transform(features_prepared)
             
-            # Predict
-            predictions = model.predict(data_scaled)
+            # Get base prediction
+            base_predictions = model.predict(data_scaled)
             
-            return predictions
+            # Enhance prediction with location intelligence
+            enhanced_predictions = []
+            for i, base_pred in enumerate(base_predictions):
+                property_features = {
+                    'Size_in_SqFt': features_df.iloc[i].get('Size_in_SqFt', 1000),
+                    'BHK': features_df.iloc[i].get('BHK', 2),
+                    'Property_Type': features_df.iloc[i].get('Property_Type', 'Apartment')
+                }
+                
+                enhanced_pred = self.location_predictor.enhance_prediction_with_location(
+                    base_pred, location_features, property_features
+                )
+                enhanced_predictions.append(enhanced_pred)
+            
+            print(f"🎯 Base prediction: ₹{base_predictions[0]:.2f} Lakhs")
+            print(f"🌟 Enhanced prediction: ₹{enhanced_predictions[0]:.2f} Lakhs")
+            print(f"📍 Location: {locality}, {city}, {state}")
+            print(f"🗺️ Coordinates: {lat:.4f}, {lon:.4f}")
+            
+            return np.array(enhanced_predictions)
             
         except Exception as e:
             print(f"Error in prediction: {str(e)}")
